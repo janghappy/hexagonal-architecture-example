@@ -16,6 +16,19 @@
         adapter.out.persistence.MemberPersistenceAdapter → JPA/H2
 ```
 
+## 모듈 구성
+
+| 모듈 | 패키지 | 의존 |
+|---|---|---|
+| `domain` | `domain` | 없음 |
+| `application` | `application.port.*`, `application.service` | `domain`(api), spring-context, spring-tx |
+| `adapter-in-web` | `adapter.in.web` | `application`, spring-boot-starter-webmvc |
+| `adapter-out-persistence` | `adapter.out.persistence` | `application`, spring-boot-starter-data-jpa |
+| `bootstrap` | 루트(`@SpringBootApplication`), `application.yaml` | 두 어댑터 모듈, H2 |
+
+모듈 경계로 컴파일 시점에 막히는 것: domain의 Spring/JPA 사용, 어댑터 간 상호 참조.
+모듈 안에서 생기는 위반(예: web 어댑터가 `MemberService`를 직접 사용)은 `bootstrap`의 `HexagonalArchitectureTest`(ArchUnit)가 잡는다.
+
 의존 방향은 항상 **바깥 → 안쪽**:
 
 - `domain`: 어떤 것에도 의존하지 않는 순수 모델
@@ -27,7 +40,7 @@
 ## 실행
 
 ```bash
-./gradlew bootRun
+./gradlew :bootstrap:bootRun
 curl -X POST localhost:8080/members -H 'Content-Type: application/json' -d '{"name":"kim"}'
 curl localhost:8080/members/1
 ```

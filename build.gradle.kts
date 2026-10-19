@@ -1,37 +1,45 @@
+import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
 plugins {
-	java
-	id("org.springframework.boot") version "4.1.1"
-	id("io.spring.dependency-management") version "1.1.7"
+	id("org.springframework.boot") version "4.1.1" apply false
+	id("io.spring.dependency-management") version "1.1.7" apply false
 }
 
-group = "com.example"
-version = "0.0.1-SNAPSHOT"
+subprojects {
+	apply(plugin = "java-library")
+	apply(plugin = "io.spring.dependency-management")
 
-java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
+	group = "com.example"
+	version = "0.0.1-SNAPSHOT"
+
+	configure<JavaPluginExtension> {
+		toolchain {
+			languageVersion = JavaLanguageVersion.of(17)
+		}
 	}
-}
 
-repositories {
-	mavenCentral()
-}
+	repositories {
+		mavenCentral()
+	}
 
-dependencies {
-	implementation("org.springframework.boot:spring-boot-h2console")
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-	implementation("org.springframework.boot:spring-boot-starter-webmvc")
-	compileOnly("org.projectlombok:lombok")
-	runtimeOnly("com.h2database:h2")
-	annotationProcessor("org.projectlombok:lombok")
-	testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
-	testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
-	testImplementation("com.tngtech.archunit:archunit-junit5:1.5.1")
-	testCompileOnly("org.projectlombok:lombok")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-	testAnnotationProcessor("org.projectlombok:lombok")
-}
+	configure<DependencyManagementExtension> {
+		imports {
+			mavenBom(SpringBootPlugin.BOM_COORDINATES)
+		}
+	}
 
-tasks.withType<Test> {
-	useJUnitPlatform()
+	dependencies {
+		"testImplementation"("org.junit.jupiter:junit-jupiter")
+		"testRuntimeOnly"("org.junit.platform:junit-platform-launcher")
+	}
+
+	// Spring Boot 플러그인은 적용된 모듈에만 -parameters를 붙이므로 라이브러리 모듈에도 직접 지정
+	tasks.withType<JavaCompile> {
+		options.compilerArgs.add("-parameters")
+	}
+
+	tasks.withType<Test> {
+		useJUnitPlatform()
+	}
 }
