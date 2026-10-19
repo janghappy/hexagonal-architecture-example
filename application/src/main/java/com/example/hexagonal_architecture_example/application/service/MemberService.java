@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class MemberService implements RegisterMemberUseCase, GetMemberUseCase {
+class MemberService implements RegisterMemberUseCase, GetMemberUseCase {
 
 	private final SaveMemberPort saveMemberPort;
 	private final LoadMemberPort loadMemberPort;

@@ -26,8 +26,11 @@
 | `adapter-out-persistence` | `adapter.out.persistence` | `application`, spring-boot-starter-data-jpa |
 | `bootstrap` | 루트(`@SpringBootApplication`), `application.yaml` | 두 어댑터 모듈, H2 |
 
-모듈 경계로 컴파일 시점에 막히는 것: domain의 Spring/JPA 사용, 어댑터 간 상호 참조.
-모듈 안에서 생기는 위반(예: web 어댑터가 `MemberService`를 직접 사용)은 `bootstrap`의 `HexagonalArchitectureTest`(ArchUnit)가 잡는다.
+컴파일 시점에 막히는 것:
+- 모듈 경계: domain의 Spring/JPA 사용, 어댑터 간 상호 참조
+- package-private: web 어댑터의 `MemberService` 직접 사용, persistence 밖에서의 JPA 엔티티·리포지토리 사용
+
+그 밖의 위반(예: web 어댑터가 `port.out`을 직접 사용)은 `bootstrap`의 `HexagonalArchitectureTest`(ArchUnit)가 잡는다.
 
 의존 방향은 항상 **바깥 → 안쪽**:
 
