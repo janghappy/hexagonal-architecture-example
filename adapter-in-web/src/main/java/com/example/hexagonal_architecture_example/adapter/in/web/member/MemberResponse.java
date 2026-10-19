@@ -1,4 +1,4 @@
-package com.example.hexagonal_architecture_example.adapter.in.web;
+package com.example.hexagonal_architecture_example.adapter.in.web.member;
 
 import com.example.hexagonal_architecture_example.domain.Member;
 

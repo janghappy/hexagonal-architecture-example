@@ -3,7 +3,7 @@
 회원(Member) 등록/조회만 있는 아주 단순한 헥사고날(Ports & Adapters) 예제.
 
 ```
- [Web 요청] → adapter.in.web.MemberController
+ [Web 요청] → adapter.in.web.member.MemberController
                   │ (호출)
                   ▼
         application.port.in  (RegisterMemberUseCase, GetMemberUseCase)
@@ -13,7 +13,7 @@
                   ▼
         application.port.out (SaveMemberPort, LoadMemberPort)
                   ▲ (구현)
-        adapter.out.persistence.MemberPersistenceAdapter → JPA/H2
+        adapter.out.persistence.member.MemberPersistenceAdapter → JPA/H2
 ```
 
 ## 모듈 구성
@@ -22,8 +22,8 @@
 |---|---|---|
 | `domain` | `domain` | 없음 |
 | `application` | `application.port.*`, `application.service` | `domain`(api), spring-context, spring-tx |
-| `adapter-in-web` | `adapter.in.web` | `application`, spring-boot-starter-webmvc |
-| `adapter-out-persistence` | `adapter.out.persistence` | `application`, spring-boot-starter-data-jpa |
+| `adapter-in-web` | `adapter.in.web.<기능>` | `application`, spring-boot-starter-webmvc |
+| `adapter-out-persistence` | `adapter.out.persistence.<기능>` | `application`, spring-boot-starter-data-jpa |
 | `bootstrap` | 루트(`@SpringBootApplication`), `application.yaml` | 두 어댑터 모듈, H2 |
 
 컴파일 시점에 막히는 것:
@@ -39,6 +39,22 @@
 - `adapter`: 웹/DB 같은 기술 세부사항. JPA 엔티티는 persistence 패키지 밖으로 나가지 않음
 
 `MemberServiceTest`는 out 포트를 메모리 구현으로 바꿔 Spring/DB 없이 유스케이스를 테스트한다.
+
+## 어댑터 내부 패키지: 기능 단위로 나눈다
+
+어댑터 안은 역할(controller/dto/entity/repository)이 아니라 **기능(애그리거트) 단위**로 나눈다.
+한 기능의 클래스가 한 패키지에 모여 있어야 DTO·JPA 엔티티·리포지토리를 package-private으로 숨길 수 있다.
+
+```
+adapter/in/web/
+  member/   MemberController, RegisterMemberRequest, MemberResponse
+  order/    OrderController, PlaceOrderRequest, OrderResponse      ← 기능이 늘면 이렇게 추가
+adapter/out/persistence/
+  member/   MemberJpaEntity, MemberJpaRepository, MemberPersistenceAdapter
+  order/    OrderJpaEntity, OrderJpaRepository, OrderPersistenceAdapter
+```
+
+`controller/`, `dto/`, `entity/`처럼 역할별로 나누면 패키지끼리 참조하느라 모든 클래스를 `public`으로 열어야 하므로 피한다.
 
 ## 실행
 

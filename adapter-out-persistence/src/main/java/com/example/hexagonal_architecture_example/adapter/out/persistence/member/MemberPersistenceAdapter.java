@@ -1,4 +1,4 @@
-package com.example.hexagonal_architecture_example.adapter.out.persistence;
+package com.example.hexagonal_architecture_example.adapter.out.persistence.member;
 
 import java.util.Optional;
 

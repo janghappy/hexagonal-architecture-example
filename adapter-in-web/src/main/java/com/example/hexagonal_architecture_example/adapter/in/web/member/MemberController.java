@@ -1,4 +1,4 @@
-package com.example.hexagonal_architecture_example.adapter.in.web;
+package com.example.hexagonal_architecture_example.adapter.in.web.member;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
