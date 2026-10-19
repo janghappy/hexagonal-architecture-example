@@ -1,6 +1,8 @@
-# Hexagonal Architecture Example
+# 헥사고날 아키텍처(Ports & Adapters) 멀티 모듈 실습
 
-회원(Member) 등록/조회만 있는 아주 단순한 헥사고날(Ports & Adapters) 예제.
+회원(등록/조회)·주문(생성/조회) 기능으로 구성한 헥사고날(Ports & Adapters) 멀티 모듈 실습.
+
+아래 흐름은 회원 기준이며, 주문은 같은 구조로 추가한 예시다.
 
 ```
  [Web 요청] → adapter.in.web.member.MemberController

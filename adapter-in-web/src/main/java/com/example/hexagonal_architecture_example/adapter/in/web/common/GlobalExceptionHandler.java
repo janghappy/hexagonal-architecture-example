@@ -6,13 +6,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.example.hexagonal_architecture_example.domain.MemberNotFoundException;
+import com.example.hexagonal_architecture_example.domain.OrderNotFoundException;
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
 
-	@ExceptionHandler(MemberNotFoundException.class)
+	@ExceptionHandler({MemberNotFoundException.class, OrderNotFoundException.class})
 	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public String handleNotFound(MemberNotFoundException e) {
+	public String handleNotFound(RuntimeException e) {
 		return e.getMessage();
 	}
 
