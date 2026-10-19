@@ -47,6 +47,7 @@
 
 ```
 adapter/in/web/
+  common/   GlobalExceptionHandler (모든 컨트롤러 공통 예외 처리)
   member/   MemberController, RegisterMemberRequest, MemberResponse
   order/    OrderController, PlaceOrderRequest, OrderResponse      ← 기능이 늘면 이렇게 추가
 adapter/out/persistence/
